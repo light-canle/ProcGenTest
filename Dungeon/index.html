@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Dungeon Generator</title>
+    <style>
+        #grid-container {
+            display: grid;
+            grid-template-columns: repeat(200, 5px); /* 5px 크기의 셀 */
+            grid-template-rows: repeat(200, 5px);
+            gap: 1px;
+        }
+        .cell {
+            width: 5px;
+            height: 5px;
+            background-color: #ccc; /* 기본 셀 색상 */
+        }
+        .wall {
+            background-color: black;
+        }
+        .path {
+            background-color: white;
+        }
+        .start {
+            background-color: green;
+        }
+        .end {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Dungeon Generator</h1>
+    <button id="generateButton">새로운 던전 생성</button>
+    <div id="grid-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>

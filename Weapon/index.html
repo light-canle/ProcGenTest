@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Weapon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .result, .weapon-list {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+            width: 80%;
+        }
+        .weapon-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .weapon-item button {
+            margin-left: 5px;
+        }
+        .control-buttons {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Virtual Weapon Generator</h1>
+    <button onclick="generateWeapon()">Generate Weapon</button>
+    <input type="number" id="weaponCount" placeholder="Enter number of weapons" min="1" style="margin-left: 10px;">
+    <button onclick="generateMultipleWeapons()">Generate Multiple Weapons</button>
+
+    <div class="result" id="result">
+        <p>Click the button to generate a weapon!</p>
+    </div>
+
+    <div class="weapon-list" id="weaponList">
+        <h2>Weapon List</h2>
+        <div class="control-buttons">
+            <button onclick="sortWeaponsByScore()">Sort by Total Score</button>
+            <button onclick="clearWeaponList()">Clear Weapon List</button>
+        </div>
+        <div id="weapons"></div>
+    </div>
+
+    <script>
+        function generateRandomScore(max) {
+            return Math.random() * max;
+        }
+
+        function saveWeaponsToStorage(weapons) {
+            localStorage.setItem('weapons', JSON.stringify(weapons));
+        }
+
+        function loadWeaponsFromStorage() {
+            const weapons = localStorage.getItem('weapons');
+            return weapons ? JSON.parse(weapons) : [];
+        }
+
+        function renderWeaponList() {
+            const weapons = loadWeaponsFromStorage();
+            const weaponListDiv = document.getElementById('weapons');
+            weaponListDiv.innerHTML = '';
+
+            weapons.forEach((weapon, index) => {
+                const weaponDiv = document.createElement('div');
+                weaponDiv.className = 'weapon-item';
+
+                const weaponInfo = document.createElement('span');
+                weaponInfo.textContent = `Weapon ${index + 1}: Atk ${weapon.attack.toFixed(2)}, Crit% ${weapon.critChance.toFixed(2)}%, CritDmg ${weapon.critDamage.toFixed(2)}%`;
+
+                const viewButton = document.createElement('button');
+                viewButton.textContent = 'View';
+                viewButton.onclick = () => {
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `
+                        <h2>Selected Weapon</h2>
+                        <p><strong>Attack:</strong> ${weapon.attack.toFixed(2)}</p>
+                        <p><strong>Critical Chance:</strong> ${weapon.critChance.toFixed(2)}%</p>
+                        <p><strong>Critical Damage:</strong> ${weapon.critDamage.toFixed(2)}%</p>
+                        <p><strong>Total Score:</strong> ${weapon.totalScore.toFixed(2)}</p>
+                    `;
+                };
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => {
+                    const weapons = loadWeaponsFromStorage();
+                    weapons.splice(index, 1);
+                    saveWeaponsToStorage(weapons);
+                    renderWeaponList();
+                };
+
+                weaponDiv.appendChild(weaponInfo);
+                weaponDiv.appendChild(viewButton);
+                weaponDiv.appendChild(deleteButton);
+                weaponListDiv.appendChild(weaponDiv);
+            });
+        }
+
+        function generateWeapon() {
+            const maxAttackScore = 50;
+            const maxCritChanceScore = 25;
+            const maxCritDamageScore = 25;
+
+            const baseAttack = 100; // 기본 공격력
+            const baseCritChance = 5; // 기본 치명타 확률 (%)
+            const baseCritDamage = 50; // 기본 치명타 피해 (%)
+
+            const attackScore = generateRandomScore(maxAttackScore);
+            const critChanceScore = generateRandomScore(maxCritChanceScore);
+            const critDamageScore = generateRandomScore(maxCritDamageScore);
+
+            const attack = baseAttack * (1 + (attackScore - 25) * 0.1);
+            const critChance = baseCritChance + (critChanceScore - 12.5) * 0.2;
+            const critDamage = baseCritDamage + (critDamageScore - 12.5) * 0.3;
+
+            const totalScore = attackScore + critChanceScore + critDamageScore;
+
+            // 7% 확률로 인챈트 추가
+            let enchant = null;
+            if (Math.random() < 0.07) {
+                const enchants = [
+                    { name: "Fire", effect: "Adds burn damage over time." },
+                    { name: "Ice", effect: "Slows the enemy." },
+                    { name: "Lightning", effect: "Chance to stun the enemy." },
+                    { name: "Sharpness", effect: "Increases attack power by 10%." },
+                    { name: "Lifesteal", effect: "Heals a portion of damage dealt." },
+                ];
+                enchant = enchants[Math.floor(Math.random() * enchants.length)];
+
+                // 인챈트에 따른 능력치 강화
+                if (enchant.name === "Sharpness") {
+                    attack *= 1.1;
+                }
+            }
+
+            const weapon = { attack, critChance, critDamage, totalScore, enchant };
+
+            const weapons = loadWeaponsFromStorage();
+            weapons.push(weapon);
+            saveWeaponsToStorage(weapons);
+
+            renderWeaponList();
+
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = `
+                <h2>Generated Weapon</h2>
+                <p><strong>Attack:</strong> ${attack.toFixed(2)}</p>
+                <p><strong>Critical Chance:</strong> ${critChance.toFixed(2)}%</p>
+                <p><strong>Critical Damage:</strong> ${critDamage.toFixed(2)}%</p>
+                <p><strong>Total Score:</strong> ${totalScore.toFixed(2)}</p>
+                ${enchant ? `<p><strong>Enchant:</strong> ${enchant.name} - ${enchant.effect}</p>` : ""}
+            `;
+        }
+
+        function generateMultipleWeapons() {
+            const countInput = document.getElementById('weaponCount');
+            const count = parseInt(countInput.value);
+
+            if (isNaN(count) || count <= 0) {
+                alert('Please enter a valid number of weapons to generate.');
+                return;
+            }
+
+            for (let i = 0; i < count; i++)
+            {
+                generateWeapon();
+            }
+        }
+
+        function sortWeaponsByScore() {
+            const weapons = loadWeaponsFromStorage();
+            weapons.sort((a, b) => b.totalScore - a.totalScore);
+            saveWeaponsToStorage(weapons);
+            renderWeaponList();
+        }
+
+        function clearWeaponList() {
+            localStorage.removeItem('weapons');
+            renderWeaponList();
+        }
+
+        // 초기화 시 무기 목록 렌더링
+        document.addEventListener('DOMContentLoaded', renderWeaponList);
+    </script>
+</body>
+</html>
