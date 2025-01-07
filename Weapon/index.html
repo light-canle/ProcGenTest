@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Virtual Weapon Generator</h1>
-    <button onclick="generateWeapon()">Generate Weapon</button>
+    <button onclick="generateSingleWeapon()">Generate Weapon</button>
     <input type="number" id="weaponCount" placeholder="Enter number of weapons" min="1" style="margin-left: 10px;">
     <button onclick="generateMultipleWeapons()">Generate Multiple Weapons</button>
 
@@ -25,6 +25,7 @@
         <div id="weapons"></div>
     </div>
 
+    <script src="util.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
