@@ -19,13 +19,16 @@
     <div class="weapon-list" id="weaponList">
         <h2>Weapon List</h2>
         <div class="control-buttons">
-            <button onclick="sortWeaponsByScore()">Sort by Total Score</button>
+            <button onclick="sortWeaponsByValue()">Sort by Value</button>
+            <button onclick="sortWeaponsByAttack()">Sort by Attack</button>
+            <button onclick="sortWeaponsByCritChance()">Sort by Crit%</button>
+            <button onclick="sortWeaponsByCritDamage()">Sort by CritDmg</button>
             <button onclick="clearWeaponList()">Clear Weapon List</button>
         </div>
         <div id="weapons"></div>
     </div>
 
-    <script src="util.js"></script>
-    <script src="script.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

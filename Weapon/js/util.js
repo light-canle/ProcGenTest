@@ -4,11 +4,6 @@ class RandomUtil {
         return a + Math.random() * (b - a);
     }
 
-    static NextInt(max)
-    {
-        return Math.floor(Math.random() * max);
-    }
-
     static NextInt(a, b)
     {
         return Math.floor(a + Math.random() * (b - a));
@@ -17,6 +12,7 @@ class RandomUtil {
     static Choice(array)
     {
         const size = array.length;
-        return array[this.NextInt(size)];
+        const index = RandomUtil.NextInt(0, size);
+        return array[index];
     }
 }
