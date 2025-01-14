@@ -7,17 +7,17 @@
     <style>
         #grid-container {
             display: grid;
-            grid-template-columns: repeat(200, 5px); /* 5px 크기의 셀 */
-            grid-template-rows: repeat(200, 5px);
+            grid-template-columns: repeat(100, 10px); /* 10px 크기의 셀 */
+            grid-template-rows: repeat(100, 10px);
             gap: 1px;
         }
         .cell {
-            width: 5px;
-            height: 5px;
+            width: 10px;
+            height: 10px;
             background-color: #ccc; /* 기본 셀 색상 */
         }
         .wall {
-            background-color: black;
+            background-color: #ccc;
         }
         .path {
             background-color: white;
@@ -32,8 +32,13 @@
 </head>
 <body>
     <h1>Random Dungeon Generator</h1>
-    <button id="generateButton">새로운 던전 생성</button>
+    <button id="randomWalk", onclick="generateDungeon(clearCells, randomWalk)">랜덤 워크</button>
+    <button id="cellularAutomata", onclick="generateDungeon(randomPathCells, cellularAutomata)">셀룰러 오토마타</button>
+    <button id="maze", onclick="generateDungeon(clearCells, generateMaze)">미로</button>
+    <button id="rooms", onclick="generateDungeon(clearCells, generateRooms)">사각형 방과 길</button>
+    <button id="BSP", onclick="generateDungeon(clearCells, BSPDungeon)">BSP</button>
     <div id="grid-container"></div>
+    <script src="util.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
